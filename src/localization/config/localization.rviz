@@ -1,0 +1,45 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz/RobotModel
+      Enabled: true
+      Name: RobotModel
+      Robot Description: robot_description
+      Value: true
+    - Alpha: 0.7
+      Class: rviz/Map
+      Enabled: true
+      Name: Map
+      Topic: /map
+      Value: true
+    - Arrow Length: 0.3
+      Class: rviz/PoseArray
+      Color: 255; 25; 0
+      Enabled: true
+      Name: PoseArray
+      Topic: /particlecloud
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: odom
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/SetInitialPose
+      Topic: /initialpose
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 15
+      Name: Current View
+      Pitch: 1.5707963267948966
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+    Saved: ~

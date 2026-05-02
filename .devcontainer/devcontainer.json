@@ -1,0 +1,47 @@
+{
+    "name": "WhereAmI ROS Noetic",
+
+    // Use the already-built image (run docker-run.sh --build first if needed)
+    "image": "whereami-ros-noetic",
+
+    // Mount the repo root as /catkin_ws inside the container
+    "workspaceMount": "source=${localWorkspaceFolder},target=/catkin_ws,type=bind",
+    "workspaceFolder": "/catkin_ws",
+
+    // Equivalent to docker-run.sh flags
+    "runArgs": [
+        "--privileged",
+        "--network=host",
+        "--env=DISPLAY=${localEnv:DISPLAY}",
+        "--env=QT_X11_NO_MITSHM=1",
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    ],
+
+    // Source ROS + workspace on every new terminal
+    "remoteEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "QT_X11_NO_MITSHM": "1"
+    },
+
+    "remoteUser": "root",
+    "postStartCommand": "bash -c 'source /opt/ros/noetic/setup.bash; [ -f /catkin_ws/devel/setup.bash ] && source /catkin_ws/devel/setup.bash; echo ROS Noetic ready'",
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash",
+                        "args": ["--login"]
+                    }
+                }
+            },
+            "extensions": [
+                "ms-vscode.cpptools",
+                "twxs.cmake",
+                "ms-python.python"
+            ]
+        }
+    }
+}
