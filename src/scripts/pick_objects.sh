@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# 1. Spawn turtlebot into Gazebo world
+xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; export ROBOT_INITIAL_POSE='-x -0.170228 -y -0.713815 -z 0.0'; roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=/root/catkin_ws/src/map/perfect.world" &
+sleep 15
+
+# 2. Launch AMCL for localization with saved map
+xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; export TURTLEBOT_3D_SENSOR=kinect; roslaunch turtlebot_gazebo amcl_demo.launch map_file:=/root/catkin_ws/src/map/my_map.yaml initial_pose_x:=-0.170228 initial_pose_y:=-0.713815 initial_pose_a:=0.0" &
+sleep 5
+
+# 3. Launch RViz with navigation view
+xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; roslaunch turtlebot_rviz_launchers view_navigation.launch" &
+sleep 5
+
+# 4. Run the pick_objects node
+xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; rosrun pick_objects pick_objects"

@@ -25,6 +25,13 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-diff-drive-controller \
     ros-noetic-robot-localization \
     ros-noetic-rtabmap-ros \
+    ros-noetic-joy \
+    ros-noetic-ecl-core \
+    ros-noetic-ecl-build \
+    ros-noetic-ecl-exceptions \
+    ros-noetic-ecl-threads \
+    ros-noetic-ecl-geometry \
+    ros-noetic-ecl-streams \
     # pgm_map_creator dependencies
     libprotobuf-dev \
     protobuf-compiler \
@@ -34,14 +41,15 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     git \
     vim \
+    xterm \
+    && ln -s /usr/bin/python3 /usr/bin/python \
     && rm -rf /var/lib/apt/lists/*
 
-# Create catkin workspace
-ENV CATKIN_WS=/catkin_ws
-RUN mkdir -p ${CATKIN_WS}/src
-
-# Copy workspace source into image (optional – docker-run.sh mounts it instead)
-# Kept here so the image can also be used standalone with docker build + run
+# Create catkin workspace and initialize it
+ENV CATKIN_WS=/root/catkin_ws
+RUN mkdir -p ${CATKIN_WS}/src && \
+    /bin/bash -c "source /opt/ros/noetic/setup.bash && cd ${CATKIN_WS}/src && catkin_init_workspace" && \
+    /bin/bash -c "source /opt/ros/noetic/setup.bash && cd ${CATKIN_WS} && catkin_make"
 
 # Set up ROS environment in bashrc
 RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>add_markers</name>
+  <version>0.0.0</version>
+  <description>Models objects with markers in RViz</description>
+  <maintainer email="todo@todo.todo">user</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>visualization_msgs</depend>
+  <depend>nav_msgs</depend>
+</package>

@@ -1,10 +1,136 @@
-# MapMyWorld - ROS RTAB-Map SLAM
+# HomeServiceRobot — ROS Noetic
 
-A ROS Noetic project using **RTAB-Map** (Real-Time Appearance-Based Mapping) to build a 3D map of an indoor environment. The robot uses an RGB-D camera and a Hokuyo lidar to perform simultaneous localisation and mapping (SLAM) with visual loop closure detection.
+A simulated home service robot built with ROS Noetic that autonomously navigates to pick up and deliver virtual objects in a Gazebo environment. The robot uses gmapping for SLAM, AMCL for localization, and move_base for autonomous navigation.
 
 ![ROS-Noetic](https://img.shields.io/badge/ROS-Noetic-blue)
 ![Gazebo](https://img.shields.io/badge/Simulation-Gazebo%2011-orange)
-![RTAB-Map](https://img.shields.io/badge/SLAM-RTAB--Map%200.21-green)
+![Docker](https://img.shields.io/badge/Container-Docker-blue)
+
+## Project Overview
+
+The robot (TurtleBot2/Kobuki) performs the following pipeline:
+
+1. **SLAM** — Drive the robot manually to build a map using gmapping
+2. **Localization** — Use AMCL to localize within the saved map
+3. **Navigation** — Send autonomous goals via move_base (Dijkstra + DWA planner)
+4. **Pick & Deliver** — Navigate to a pickup zone, wait 5 seconds, then deliver to a drop off zone, with a virtual object visualized in RViz via markers
+
+## Packages
+
+| Package | Description |
+|---|---|
+| `turtlebot` / `turtlebot_apps` | TurtleBot2 core bringup, navigation, teleop |
+| `turtlebot_simulator` | Gazebo simulation of TurtleBot2 |
+| `turtlebot_interactions` | RViz launchers |
+| `kobuki` / `kobuki_desktop` | Kobuki base drivers and Gazebo plugin |
+| `kobuki_msgs` | Kobuki message types |
+| `depthimage_to_laserscan` | Converts Kinect depth image to 2D laser scan |
+| `slam_gmapping` | GMapping SLAM |
+| `yujin_ocs` | Velocity multiplexer (cmd_vel_mux) |
+| `pick_objects` | Sends autonomous pickup and drop off goals to move_base |
+| `add_markers` | Subscribes to odometry and shows/hides virtual object marker in RViz |
+| `map` | Saved map files (`my_map.yaml`, `my_map.pgm`, `perfect.world`) |
+| `rvizConfig` | Custom RViz config with Marker display |
+| `scripts` | Shell scripts to launch each project phase |
+
+## Directory Structure
+
+```text
+src/
+├── pick_objects/
+│   └── src/pick_objects.cpp      # Autonomous navigation to pickup/dropoff
+├── add_markers/
+│   └── src/add_markers.cpp       # Virtual object marker (subscribes to /odom)
+├── map/
+│   ├── perfect.world             # Gazebo world
+│   ├── my_map.yaml               # Saved SLAM map metadata
+│   └── my_map.pgm                # Saved SLAM map image
+├── rvizConfig/
+│   └── home_service.rviz         # RViz config with Marker display
+├── scripts/
+│   ├── test_slam.sh              # Launch Gazebo + gmapping + teleop + RViz
+│   ├── test_navigation.sh        # Launch Gazebo + AMCL + RViz
+│   ├── pick_objects.sh           # Launch full stack + pick_objects node
+│   ├── add_markers.sh            # Launch full stack + add_markers node
+│   └── home_service.sh           # Full home service demo
+├── turtlebot_simulator/          # Gazebo launch files
+├── turtlebot_apps/               # Navigation params and launch files
+└── ...                           # Other dependency packages
+```
+
+## Running with Docker
+
+```bash
+# Build image
+docker build -t homeservicerobot-ros-noetic .
+
+# Start container (X11 forwarded, workspace mounted)
+sudo ./docker-run.sh
+
+# Inside container — build workspace
+cd /root/catkin_ws && catkin_make
+
+# Source workspace
+source devel/setup.bash
+```
+
+## Usage
+
+All scripts are run **inside the Docker container**:
+
+### 1. Build a map with SLAM
+```bash
+./src/scripts/test_slam.sh
+```
+Drive the robot with the teleop window. When done, save the map:
+```bash
+rosrun map_server map_saver -f /root/catkin_ws/src/map/my_map
+```
+
+### 2. Test navigation with AMCL
+```bash
+./src/scripts/test_navigation.sh
+```
+Use the **2D Nav Goal** button in RViz to send the robot to a location.
+
+### 3. Test pick & drop off navigation
+```bash
+./src/scripts/pick_objects.sh
+```
+The robot autonomously navigates to the pickup zone `(2.99, -2.37)`, waits 5 seconds, then travels to the drop off zone `(3.74, -4.54)`.
+
+### 4. Test virtual object markers
+```bash
+./src/scripts/add_markers.sh
+```
+A blue cube appears at the pickup zone, disappears when the robot arrives, and reappears at the drop off zone.
+
+### 5. Full home service demo
+```bash
+./src/scripts/home_service.sh
+```
+Launches all nodes together. The robot navigates autonomously while the virtual object marker tracks its progress.
+
+## Key Configuration Files
+
+| File | Purpose |
+|---|---|
+| `turtlebot_apps/turtlebot_navigation/param/costmap_common_params.yaml` | Obstacle inflation radius, cost scaling |
+| `turtlebot_apps/turtlebot_navigation/launch/includes/gmapping/kinect_gmapping.launch.xml` | GMapping SLAM parameters |
+| `turtlebot_interactions/turtlebot_rviz_launchers/rviz/navigation.rviz` | Base RViz navigation config |
+| `kobuki/kobuki_description/urdf/kobuki_gazebo.urdf.xacro` | Kobuki Gazebo plugin (TF, sensors) |
+
+## Dependencies (installed in Docker image)
+
+- `ros-noetic-navigation` (amcl, move-base, map-server)
+- `ros-noetic-slam-gmapping`
+- `ros-noetic-robot-state-publisher`
+- `ros-noetic-gazebo-ros`
+- `ros-noetic-rtabmap-ros`
+- `ros-noetic-joy`
+- `ros-noetic-xacro`
+- ECL libraries (for Kobuki)
+
 
 ## Project Overview
 
