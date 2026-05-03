@@ -2,6 +2,10 @@
   <!-- Cartographer 2D SLAM for TurtleBot2 with Kinect -->
   <!-- Replaces gmapping_demo.launch — does not modify any existing files -->
 
+  <!-- Throttle /odom to 10 Hz to avoid duplicate sim-time timestamps that crash Cartographer -->
+  <node name="odom_throttle" pkg="topic_tools" type="throttle"
+        args="messages /odom 10 /odom_throttled" output="screen"/>
+
   <!-- Remap /scan from depthimage_to_laserscan (already running via Gazebo) -->
   <node name="cartographer_node"
         pkg="cartographer_ros"
@@ -10,7 +14,7 @@
               -configuration_basename turtlebot2_cartographer.lua"
         output="screen">
     <remap from="scan" to="/scan"/>
-    <!-- odom disabled in lua: Gazebo kobuki emits duplicate timestamps -->
+    <remap from="odom" to="/odom_throttled"/>
   </node>
 
   <!-- Convert Cartographer's internal map to ROS OccupancyGrid (/map topic) -->
