@@ -19,7 +19,7 @@ xterm -e "bash -c '$SETUP; export TURTLEBOT_3D_SENSOR=kinect; roslaunch /root/ca
 sleep 8
 
 # 3. Launch keyboard teleop to manually drive the robot
-xterm -e "bash -c '$SETUP; roslaunch turtlebot_teleop keyboard_teleop.launch 2>&1 | $FILTER; exec bash'" &
+xterm -e "bash -c '$SETUP; roslaunch turtlebot_teleop keyboard_teleop.launch; exec bash'" &
 sleep 5
 
 # 4. Launch RViz with navigation view
