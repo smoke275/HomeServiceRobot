@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-ecl-threads \
     ros-noetic-ecl-geometry \
     ros-noetic-ecl-streams \
+    ros-noetic-explore-lite \
     # pgm_map_creator dependencies
     libprotobuf-dev \
     protobuf-compiler \
@@ -50,6 +51,33 @@ ENV CATKIN_WS=/root/catkin_ws
 RUN mkdir -p ${CATKIN_WS}/src && \
     /bin/bash -c "source /opt/ros/noetic/setup.bash && cd ${CATKIN_WS}/src && catkin_init_workspace" && \
     /bin/bash -c "source /opt/ros/noetic/setup.bash && cd ${CATKIN_WS} && catkin_make"
+
+# Build Cartographer from source (not available as binary in Noetic snapshot repo)
+RUN apt-get update && apt-get install -y \
+    ninja-build \
+    python3-wstool \
+    stow \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libgoogle-glog0v5 \
+    liblua5.3-dev \
+    libcairo2-dev \
+    libpcl-dev \
+    libatlas3-base \
+    libceres-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /opt/cartographer_ws/src && \
+    cd /opt/cartographer_ws && \
+    wstool init src && \
+    wstool merge -t src https://raw.githubusercontent.com/cartographer-project/cartographer_ros/master/cartographer_ros.rosinstall && \
+    wstool update -t src && \
+    src/cartographer/scripts/install_abseil.sh && \
+    /bin/bash -c "source /opt/ros/noetic/setup.bash && \
+    apt-get update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=noetic -y --skip-keys=\"libabsl-dev python3-sphinx libceres-dev\" && \
+    catkin_make_isolated --install --use-ninja --install-space /opt/ros/noetic -j2"
 
 # Set up ROS environment in bashrc
 RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \

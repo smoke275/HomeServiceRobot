@@ -1,9 +1,11 @@
 #!/bin/sh
 
-# Assumes Gazebo is already running with perfect.world via launch.sh
+# Create a 3x speed world file for faster SLAM (does not modify the original)
+SLAM_WORLD=/tmp/perfect_slam.world
+sed 's|<real_time_update_rate>1000</real_time_update_rate>|<real_time_update_rate>3000</real_time_update_rate>|' /root/catkin_ws/src/map/perfect.world > $SLAM_WORLD
 
 # 1. Spawn turtlebot into the running Gazebo world
-xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; export ROBOT_INITIAL_POSE='-x -0.170228 -y -0.713815 -z 0.0'; roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=/root/catkin_ws/src/map/perfect.world" &
+xterm -e "source /opt/ros/noetic/setup.bash; source /root/catkin_ws/devel/setup.bash; export ROBOT_INITIAL_POSE='-x -0.170228 -y -0.713815 -z 0.0'; roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=/tmp/perfect_slam.world" &
 sleep 5
 
 # 2. Launch SLAM gmapping
