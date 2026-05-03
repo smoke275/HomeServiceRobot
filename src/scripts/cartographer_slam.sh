@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Cartographer SLAM — replaces test_slam.sh with loop-closure capable mapping
+# Cartographer SLAM — manual teleop version (replaces test_slam.sh)
+# For autonomous frontier exploration use auto_cartographer.sh
 # Original gmapping test_slam.sh is untouched
 
 FILTER='grep -v -e TF_REPEATED_DATA -e buffer_core.cpp'
