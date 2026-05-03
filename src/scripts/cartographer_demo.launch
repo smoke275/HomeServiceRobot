@@ -10,7 +10,7 @@
               -configuration_basename turtlebot2_cartographer.lua"
         output="screen">
     <remap from="scan" to="/scan"/>
-    <remap from="odom" to="/odom"/>
+    <!-- odom disabled in lua: Gazebo kobuki emits duplicate timestamps -->
   </node>
 
   <!-- Convert Cartographer's internal map to ROS OccupancyGrid (/map topic) -->
