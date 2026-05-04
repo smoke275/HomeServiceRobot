@@ -37,8 +37,9 @@ int main(int argc, char** argv)
   ros::Duration(5.0).sleep();
 
   // Drop off zone
-  goal.target_pose.pose.position.x = 3.31;
-  goal.target_pose.pose.position.y = -4.57;
+  goal.target_pose.header.stamp = ros::Time::now();
+  goal.target_pose.pose.position.x = 0.32;
+  goal.target_pose.pose.position.y = -4.10;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Sending robot to drop off zone");

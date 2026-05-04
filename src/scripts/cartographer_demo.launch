@@ -10,7 +10,7 @@
   <node name="cartographer_node"
         pkg="cartographer_ros"
         type="cartographer_node"
-        args="-configuration_directory /root/catkin_ws/src/scripts
+        args="-configuration_directory $(env CATKIN_WS)/src/scripts
               -configuration_basename turtlebot2_cartographer.lua"
         output="screen">
     <remap from="scan" to="/scan"/>

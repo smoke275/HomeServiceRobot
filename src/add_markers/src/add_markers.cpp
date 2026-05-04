@@ -5,7 +5,7 @@
 
 // Zone coordinates
 const double PICKUP_X  = 2.99,  PICKUP_Y  = -2.37;
-const double DROPOFF_X = 3.74,  DROPOFF_Y = -4.54;
+const double DROPOFF_X = 0.32,  DROPOFF_Y = -4.10;
 const double THRESHOLD = 0.5;
 
 enum State { GOING_TO_PICKUP, PICKED_UP, GOING_TO_DROPOFF, DROPPED_OFF };
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "add_markers");
   ros::NodeHandle n;
 
-  marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+  marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1, true);
   ros::Subscriber odom_sub = n.subscribe("/odom", 10, odomCallback);
 
   // Wait for rviz to subscribe

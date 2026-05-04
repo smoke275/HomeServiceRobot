@@ -8,7 +8,7 @@ sigma: 0.05
 kernelSize: 5                   # Search kernel (wider to find best alignment)
 lstep: 0.02                     # Finer linear search step
 astep: 0.02                     # Finer angular search step
-iterations: 8                  # More iterations to converge on correct alignment
+iterations: 10                  # More iterations to converge on correct alignment
 lsigma: 0.05                    # Tighter likelihood (was 0.075)
 ogain: 3.0
 lskip: 0
