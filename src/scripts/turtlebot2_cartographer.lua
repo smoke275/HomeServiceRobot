@@ -40,17 +40,17 @@ TRAJECTORY_BUILDER_2D.max_range = 8.0           -- Kinect max depth
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 5.0
 TRAJECTORY_BUILDER_2D.use_imu_data = false       -- no IMU available
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.1
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.angular_search_window = math.rad(20.)
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.15
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.angular_search_window = math.rad(25.)
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 1e-1
 TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 1e-1
 
 -- Pose graph (loop closure) tuning
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
-POSE_GRAPH.optimize_every_n_nodes = 35           -- trigger loop closure frequently
-POSE_GRAPH.constraint_builder.sampling_ratio = 0.3
-POSE_GRAPH.constraint_builder.max_constraint_distance = 15.0
-POSE_GRAPH.constraint_builder.min_score = 0.55
+POSE_GRAPH.optimize_every_n_nodes = 20           -- trigger loop closure frequently
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.5
+POSE_GRAPH.constraint_builder.max_constraint_distance = 25.0
+POSE_GRAPH.constraint_builder.min_score = 0.50
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.6
 
 return options
